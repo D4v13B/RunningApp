@@ -202,7 +202,7 @@ export default function HomeScreen() {
                   { color: isDark ? Colors.text.darkDark : Colors.text.darkLight },
                 ]}
               >
-                Goal Completion
+                Progreso de Objetivo
               </Text>
             </View>
           </View>

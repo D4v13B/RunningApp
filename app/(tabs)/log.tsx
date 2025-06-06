@@ -81,8 +81,6 @@ export default function LogScreen() {
       };
       
       // await DB.addWorkout(workout);
-      
-      // Trigger haptic feedback on success
       if (Platform.OS !== 'web') {
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       }
@@ -92,16 +90,16 @@ export default function LogScreen() {
       setTime('');
       setDate(new Date().toISOString().split('T')[0]);
       
-      // Show success message
-      setSuccessMessage('Workout saved successfully!');
+      //Mostrar mensaje de guardado
+      setSuccessMessage('Entrenamiento guardado de manera correcta');
       
       // Reset success message after 3 seconds
       setTimeout(() => {
         setSuccessMessage('');
       }, 3000);
     } catch (error) {
-      console.error('Error saving workout:', error);
-      Alert.alert('Error', 'Failed to save workout');
+      console.error('Error al guardar el entrenamiento', error);
+      Alert.alert('Error', 'Fallo al guardar el entrenamiento');
     } finally {
       setIsLoading(false);
     }
@@ -135,7 +133,7 @@ export default function LogScreen() {
                 { color: isDark ? Colors.text.darkDark : Colors.text.darkLight },
               ]}
             >
-              Track your progress and see your improvements
+              Checkea tu progreso y mira tus avances
             </Text>
           </View>
 
@@ -146,7 +144,7 @@ export default function LogScreen() {
                 { color: Colors.text[colorScheme] },
               ]}
             >
-              Workout Details
+              Detalles de entrenamiento
             </Text>
             
             <Input

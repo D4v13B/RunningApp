@@ -103,7 +103,7 @@ export default function WelcomeScreen() {
                 { color: Colors.text[colorScheme] },
               ]}
             >
-              Welcome to RunTracker
+              Bienvenido a RunTracker
             </Text>
             <Text
               style={[
@@ -111,50 +111,50 @@ export default function WelcomeScreen() {
                 { color: colorScheme === 'dark' ? Colors.text.darkDark : Colors.text.darkLight },
               ]}
             >
-              Lets get to know you to personalize your experience
+              Dejanos saber tu info, para mejorar la experiencia
             </Text>
           </View>
 
           <View style={styles.formContainer}>
             <Input
-              label="What's your name?"
+              label="Cual es tu nombre?"
               value={name}
               onChangeText={setName}
-              placeholder="Enter your name"
+              placeholder="Escribe tu nombre"
               autoCapitalize="words"
               error={errors.name}
             />
 
             <Input
-              label="How old are you?"
+              label="Que edad tienes?"
               value={age}
               onChangeText={setAge}
-              placeholder="Enter your age"
+              placeholder="Escribe tu edad"
               keyboardType="numeric"
               error={errors.age}
             />
 
             <Input
-              label="What's your height? (cm)"
+              label="Cual es tu altura? (cm)"
               value={height}
               onChangeText={setHeight}
-              placeholder="Enter your height"
+              placeholder="Escribe tu altura"
               keyboardType="numeric"
               error={errors.height}
             />
 
             <Input
-              label="What's your weight? (kg)"
+              label="Cual es tu peso? (kg)"
               value={weight}
               onChangeText={setWeight}
-              placeholder="Enter your weight"
+              placeholder="Escribe tu peso"
               keyboardType="numeric"
               error={errors.weight}
             />
           </View>
 
           <Button
-            title="Get Started"
+            title="Iniciemos el maraton"
             onPress={handleSubmit}
             loading={isLoading}
             size="large"

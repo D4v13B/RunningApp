@@ -49,7 +49,7 @@ export default function GoalsScreen() {
     loadGoals();
   }, []);
 
-  // Validate form
+  // Validar formulario
   const validate = (): boolean => {
     const newErrors: Record<string, string> = {};
     
@@ -66,7 +66,7 @@ export default function GoalsScreen() {
     if (!deadline) {
       newErrors.deadline = 'Deadline is required';
     } else {
-      // Validate date format (YYYY-MM-DD)
+      // Validar date format (YYYY-MM-DD)
       const datePattern = /^\d{4}-\d{2}-\d{2}$/;
       if (!datePattern.test(deadline)) {
         newErrors.deadline = 'Please enter a valid date (YYYY-MM-DD)';
@@ -99,20 +99,20 @@ export default function GoalsScreen() {
       
       // await DB.addGoal(newGoal);
       
-      // Trigger haptic feedback on success
+      // Haptics para dar feedback de que se guardo
       if (Platform.OS !== 'web') {
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       }
       
-      // Reset form
+      // Reiniciar form
       setDescription('');
       setTarget('');
       
-      // Reload goals
+      // Recargar metas
       await loadGoals();
       
-      // Show success message
-      setSuccessMessage('Goal added successfully!');
+      // Mostrar objetivo
+      setSuccessMessage('Objetivo agregado correctamente!');
       
       // Reset success message after 3 seconds
       setTimeout(() => {
@@ -163,7 +163,7 @@ export default function GoalsScreen() {
                 { color: Colors.text[colorScheme] },
               ]}
             >
-              Your Goals
+              Tus Metas!
             </Text>
             <Text
               style={[
@@ -171,7 +171,7 @@ export default function GoalsScreen() {
                 { color: isDark ? Colors.text.darkDark : Colors.text.darkLight },
               ]}
             >
-              Set targets to stay motivated
+              Ingresa objetivos para mantenerte motivado
             </Text>
           </View>
 
@@ -182,31 +182,31 @@ export default function GoalsScreen() {
                 { color: Colors.text[colorScheme] },
               ]}
             >
-              Create New Goal
+              Crear nuevo objetivo
             </Text>
             
             <Input
-              label="Goal Description"
+              label="Descripcion de la meta"
               value={description}
               onChangeText={setDescription}
-              placeholder="e.g., Run 50km this month"
+              placeholder="e.j., Correr 50 km este mes"
               error={errors.description}
             />
             
             <Input
-              label="Target (km)"
+              label="Objetivo (km)"
               value={target}
               onChangeText={setTarget}
-              placeholder="Enter target distance"
+              placeholder="Introducir la distancia objetivo"
               keyboardType="numeric"
               error={errors.target}
             />
             
             <Input
-              label="Deadline (YYYY-MM-DD)"
+              label="Fecha final (YYYY-MM-DD)"
               value={deadline}
               onChangeText={setDeadline}
-              placeholder="Enter deadline"
+              placeholder="Ingresar la fecha final"
               error={errors.deadline}
             />
             
@@ -223,7 +223,7 @@ export default function GoalsScreen() {
               </View>
             ) : (
               <Button
-                title="Save Goal"
+                title="Guardar meta"
                 onPress={saveGoal}
                 loading={isLoading}
                 style={styles.saveButton}
@@ -238,7 +238,7 @@ export default function GoalsScreen() {
                 { color: Colors.text[colorScheme] },
               ]}
             >
-              Current Goals
+              Metas Actuales
             </Text>
             
             {goals.length === 0 ? (
@@ -248,7 +248,7 @@ export default function GoalsScreen() {
                   { color: isDark ? Colors.text.darkDark : Colors.text.darkLight },
                 ]}
               >
-                No goals set yet. Create your first goal above!
+                No hay metas aun. Ingresa uno nuevo y corre!
               </Text>
             ) : (
               goals.map((goal) => (
@@ -268,7 +268,7 @@ export default function GoalsScreen() {
                         { color: isDark ? Colors.text.darkDark : Colors.text.darkLight },
                       ]}
                     >
-                      Due: {formatDate(goal.deadline)}
+                      Hasta: {formatDate(goal.deadline)}
                     </Text>
                   </View>
                   

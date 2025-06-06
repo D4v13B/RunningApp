@@ -40,7 +40,7 @@ export default function HistoryScreen() {
   //   loadWorkouts();
   // }, []);
 
-  // Empty list component
+  // ListComponent cuando esta vacio
   const EmptyList = () => (
     <View style={styles.emptyContainer}>
       <Text
@@ -49,7 +49,7 @@ export default function HistoryScreen() {
           { color: colorScheme === 'dark' ? Colors.text.darkDark : Colors.text.darkLight }
         ]}
       >
-        No workouts found. Start logging your runs to see them here!
+        No se han encontrado entrenamientos. Empieza a guardar tus carreras para verlas aqui
       </Text>
     </View>
   );
@@ -72,7 +72,7 @@ export default function HistoryScreen() {
             { color: colorScheme === 'dark' ? Colors.text.darkDark : Colors.text.darkLight }
           ]}
         >
-          Workouts
+          Entrenamientos
         </Text>
       </View>
       
@@ -93,7 +93,7 @@ export default function HistoryScreen() {
             { color: colorScheme === 'dark' ? Colors.text.darkDark : Colors.text.darkLight }
           ]}
         >
-          Total Distance
+          Distancia total
         </Text>
       </View>
     </View>
@@ -113,7 +113,7 @@ export default function HistoryScreen() {
             { color: Colors.text[colorScheme] }
           ]}
         >
-          Workout History
+          Historial de carreras
         </Text>
       </View>
       
