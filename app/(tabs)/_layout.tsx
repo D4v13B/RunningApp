@@ -1,43 +1,58 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
-import { Platform } from 'react-native';
-
-import { HapticTab } from '@/components/HapticTab';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-import TabBarBackground from '@/components/ui/TabBarBackground';
+import { useColorScheme } from 'react-native';
+// import { ChartBar as BarChart, Chrome as Home, History, Target } from 'lucide-react-native';
 import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
+  const colorScheme = useColorScheme() || 'light';
 
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+        tabBarActiveTintColor: Colors.tabBar.active[colorScheme],
+        tabBarInactiveTintColor: Colors.tabBar.inactive[colorScheme],
+        tabBarStyle: {
+          backgroundColor: Colors.tabBar.background[colorScheme],
+          borderTopColor: Colors.border[colorScheme],
+          height: 88,
+          paddingBottom: 32,
+          paddingTop: 12,
+        },
+        tabBarLabelStyle: {
+          fontSize: 12,
+          fontWeight: '500',
+        },
         headerShown: false,
-        tabBarButton: HapticTab,
-        tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          ios: {
-            // Use a transparent background on iOS to show the blur effect
-            position: 'absolute',
-          },
-          default: {},
-        }),
-      }}>
+      }}
+    >
       <Tabs.Screen
         name="index"
         options={{
           title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          tabBarIcon: ({ color, size }) => <MaterialIcons name='home' size={size} color={color}/>,
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name="log"
         options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          title: 'Log Run',
+          tabBarIcon: ({ color, size }) => <MaterialIcons name='bar-chart' size={size} color={color}/>,
+        }}
+      />
+      <Tabs.Screen
+        name="history"
+        options={{
+          title: 'History',
+          tabBarIcon: ({ color, size }) => <MaterialIcons name='history' size={size} color={color}/>,
+        }}
+      />
+      <Tabs.Screen
+        name="goals"
+        options={{
+          title: 'Goals',
+          tabBarIcon: ({ color, size }) => <MaterialIcons name='flag' size={size} color={color}/>,
         }}
       />
     </Tabs>
