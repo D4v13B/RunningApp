@@ -1,16 +1,16 @@
-import { Colors } from '@/constants/Colors';
-import React, { ReactNode } from 'react';
-import { StyleSheet, View, ViewStyle, useColorScheme } from 'react-native';
+import { Colors } from "@/constants/Colors"
+import React, { ReactNode } from "react"
+import { StyleSheet, View, ViewStyle, useColorScheme } from "react-native"
 
 interface CardProps {
-  children: ReactNode;
-  style?: ViewStyle;
-  shadow?: 'none' | 'small' | 'medium' | 'large';
+  children: ReactNode
+  style?: ViewStyle
+  shadow?: "none" | "small" | "medium" | "large"
 }
 
-export function Card({ children, style, shadow = 'medium' }: CardProps) {
-  const colorScheme = useColorScheme() || 'light';
-  const isDark = colorScheme === 'dark';
+export function Card({ children, style, shadow = "medium" }: CardProps) {
+  const colorScheme = useColorScheme() || "light"
+  const isDark = colorScheme === "dark"
 
   // Shadow styles based on intensity
   const shadowStyles: Record<string, ViewStyle> = {
@@ -24,7 +24,7 @@ export function Card({ children, style, shadow = 'medium' }: CardProps) {
     large: isDark
       ? { shadowOpacity: 0.3, shadowRadius: 8, elevation: 8 }
       : { shadowOpacity: 0.2, shadowRadius: 8, elevation: 8 },
-  };
+  }
 
   return (
     <View
@@ -40,7 +40,7 @@ export function Card({ children, style, shadow = 'medium' }: CardProps) {
     >
       {children}
     </View>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
     padding: 16,
     marginVertical: 8,
     borderWidth: 1,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
   },
-});
+})

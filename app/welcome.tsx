@@ -1,9 +1,9 @@
-import { Button } from '@/components/Button';
-import { Input } from '@/components/Input';
-import { Colors } from '@/constants/Colors';
-import { Storage, UserProfile } from '@/services/StorageService';
-import { router } from 'expo-router';
-import React, { useState } from 'react';
+import { Button } from "@/components/Button"
+import { Input } from "@/components/Input"
+import { Colors } from "@/constants/Colors"
+import { Storage, UserProfile } from "@/services/StorageService"
+import { router } from "expo-router"
+import React, { useState } from "react"
 import {
   KeyboardAvoidingView,
   Platform,
@@ -11,54 +11,62 @@ import {
   StyleSheet,
   Text,
   useColorScheme,
-  View
-} from 'react-native';
+  View,
+} from "react-native"
 
 export default function WelcomeScreen() {
-  const colorScheme = useColorScheme() || 'light';
-  const [name, setName] = useState('');
-  const [age, setAge] = useState('');
-  const [height, setHeight] = useState('');
-  const [weight, setWeight] = useState('');
-  const [errors, setErrors] = useState<Record<string, string>>({});
-  const [isLoading, setIsLoading] = useState(false);
+  const colorScheme = useColorScheme() || "light"
+  const [name, setName] = useState("")
+  const [age, setAge] = useState("")
+  const [height, setHeight] = useState("")
+  const [weight, setWeight] = useState("")
+  const [errors, setErrors] = useState<Record<string, string>>({})
+  const [isLoading, setIsLoading] = useState(false)
 
   // Validate inputs
   const validate = (): boolean => {
-    const newErrors: Record<string, string> = {};
+    const newErrors: Record<string, string> = {}
 
     if (!name.trim()) {
-      newErrors.name = 'Name is required';
+      newErrors.name = "Name is required"
     }
 
     if (!age.trim()) {
-      newErrors.age = 'Age is required';
+      newErrors.age = "Age is required"
     } else if (isNaN(Number(age)) || Number(age) <= 0 || Number(age) > 120) {
-      newErrors.age = 'Please enter a valid age';
+      newErrors.age = "Please enter a valid age"
     }
 
     if (!height.trim()) {
-      newErrors.height = 'Height is required';
-    } else if (isNaN(Number(height)) || Number(height) <= 0 || Number(height) > 250) {
-      newErrors.height = 'Please enter a valid height in cm';
+      newErrors.height = "Height is required"
+    } else if (
+      isNaN(Number(height)) ||
+      Number(height) <= 0 ||
+      Number(height) > 250
+    ) {
+      newErrors.height = "Please enter a valid height in cm"
     }
 
     if (!weight.trim()) {
-      newErrors.weight = 'Weight is required';
-    } else if (isNaN(Number(weight)) || Number(weight) <= 0 || Number(weight) > 300) {
-      newErrors.weight = 'Please enter a valid weight in kg';
+      newErrors.weight = "Weight is required"
+    } else if (
+      isNaN(Number(weight)) ||
+      Number(weight) <= 0 ||
+      Number(weight) > 300
+    ) {
+      newErrors.weight = "Please enter a valid weight in kg"
     }
 
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
 
   // Handle profile submission
   const handleSubmit = async () => {
-    if (!validate()) return;
+    if (!validate()) return
 
-    setIsLoading(true);
-    
+    setIsLoading(true)
+
     try {
       // Create user profile
       const userProfile: UserProfile = {
@@ -66,28 +74,28 @@ export default function WelcomeScreen() {
         age: Number(age),
         height: Number(height),
         weight: Number(weight),
-      };
-      
+      }
+
       // Guardar el profile
-      await Storage.saveUserProfile(userProfile);
-      
+      await Storage.saveUserProfile(userProfile)
+
       //Marcar para saber que ya iniciamos sesion
-      await Storage.setFirstLaunch(false);
-      
+      await Storage.setFirstLaunch(false)
+
       // Navegar a la app
-      router.replace('/(tabs)');
+      router.replace("/(tabs)")
     } catch (error) {
-      console.error('Error saving profile:', error);
+      console.error("Error saving profile:", error)
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}
     >
       <ScrollView
         contentContainerStyle={[
@@ -97,18 +105,18 @@ export default function WelcomeScreen() {
       >
         <View style={styles.container}>
           <View style={styles.headerContainer}>
-            <Text
-              style={[
-                styles.title,
-                { color: Colors.text[colorScheme] },
-              ]}
-            >
+            <Text style={[styles.title, { color: Colors.text[colorScheme] }]}>
               Bienvenido a RunTracker
             </Text>
             <Text
               style={[
                 styles.subtitle,
-                { color: colorScheme === 'dark' ? Colors.text.darkDark : Colors.text.darkLight },
+                {
+                  color:
+                    colorScheme === "dark"
+                      ? Colors.text.darkDark
+                      : Colors.text.darkLight,
+                },
               ]}
             >
               Dejanos saber tu info, para mejorar la experiencia
@@ -163,7 +171,7 @@ export default function WelcomeScreen() {
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -177,18 +185,18 @@ const styles = StyleSheet.create({
   headerContainer: {
     marginTop: 60,
     marginBottom: 40,
-    alignItems: 'center',
+    alignItems: "center",
   },
   title: {
     fontSize: 28,
-    fontWeight: '700',
+    fontWeight: "700",
     marginBottom: 12,
-    textAlign: 'center',
+    textAlign: "center",
   },
   subtitle: {
     fontSize: 16,
-    textAlign: 'center',
-    maxWidth: '80%',
+    textAlign: "center",
+    maxWidth: "80%",
   },
   formContainer: {
     marginBottom: 24,
@@ -196,4 +204,4 @@ const styles = StyleSheet.create({
   button: {
     marginTop: 16,
   },
-});
+})

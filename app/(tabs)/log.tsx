@@ -1,10 +1,10 @@
-import { Button } from '@/components/Button';
-import { Card } from '@/components/Card';
-import { Input } from '@/components/Input';
-import { Colors } from '@/constants/Colors';
-import { Workout } from '@/services/DatabaseService';
-import * as Haptics from 'expo-haptics';
-import React, { useState } from 'react';
+import { Button } from "@/components/Button"
+import { Card } from "@/components/Card"
+import { Input } from "@/components/Input"
+import { Colors } from "@/constants/Colors"
+import { Workout, WorkoutGoalsType } from "@/services/DatabaseService"
+import * as Haptics from "expo-haptics"
+import React, { useState } from "react"
 import {
   Alert,
   KeyboardAvoidingView,
@@ -15,95 +15,101 @@ import {
   TouchableOpacity,
   useColorScheme,
   View,
-} from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+} from "react-native"
+import { SafeAreaView } from "react-native-safe-area-context"
 
-// Workout types
-const workoutTypes = ['Run', 'Jog', 'Sprint', 'Trail', 'Interval', 'Race'];
+const workoutTypes: WorkoutGoalsType[] = [
+  "Run",
+  "Jog",
+  "Sprint",
+  "Trail",
+  "Interval",
+  "Race",
+]
 
 export default function LogScreen() {
-  const colorScheme = useColorScheme() || 'light';
-  const isDark = colorScheme === 'dark';
-  
-  const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
-  const [distance, setDistance] = useState('');
-  const [time, setTime] = useState('');
-  const [selectedType, setSelectedType] = useState('Run');
-  const [errors, setErrors] = useState<Record<string, string>>({});
-  const [isLoading, setIsLoading] = useState(false);
-  const [successMessage, setSuccessMessage] = useState('');
+  const colorScheme = useColorScheme() || "light"
+  const isDark = colorScheme === "dark"
+
+  const [date, setDate] = useState(new Date().toISOString().split("T")[0])
+  const [distance, setDistance] = useState("")
+  const [time, setTime] = useState("")
+  const [selectedType, setSelectedType] = useState<WorkoutGoalsType>("Run")
+  const [errors, setErrors] = useState<Record<string, string>>({})
+  const [isLoading, setIsLoading] = useState(false)
+  const [successMessage, setSuccessMessage] = useState("")
 
   // Handle workout type selection
-  const selectWorkoutType = (type: string) => {
-    setSelectedType(type);
-    if (Platform.OS !== 'web') {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+  const selectWorkoutType = (type: WorkoutGoalsType) => {
+    setSelectedType(type)
+    if (Platform.OS !== "web") {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
     }
-  };
+  }
 
   // Validate form
   const validate = (): boolean => {
-    const newErrors: Record<string, string> = {};
-    
+    const newErrors: Record<string, string> = {}
+
     if (!date) {
-      newErrors.date = 'Date is required';
+      newErrors.date = "La fecha es requerida"
     }
-    
+
     if (!distance) {
-      newErrors.distance = 'Distance is required';
+      newErrors.distance = "Distancia requerida"
     } else if (isNaN(Number(distance)) || Number(distance) <= 0) {
-      newErrors.distance = 'Please enter a valid distance';
+      newErrors.distance = "Por favor, introduce una fecha valida"
     }
-    
+
     if (!time) {
-      newErrors.time = 'Time is required';
+      newErrors.time = "Tiempo es requerido"
     } else if (isNaN(Number(time)) || Number(time) <= 0) {
-      newErrors.time = 'Please enter a valid time in minutes';
+      newErrors.time = "Por favir inserta un tiempo en minutos requerido"
     }
-    
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
 
   // Save workout
   const saveWorkout = async () => {
-    if (!validate()) return;
-    
-    setIsLoading(true);
-    setSuccessMessage('');
-    
+    if (!validate()) return
+
+    setIsLoading(true)
+    setSuccessMessage("")
+
     try {
       const workout: Workout = {
         date,
         distance: Number(distance),
         time: Number(time),
         type: selectedType,
-      };
-      
-      // await DB.addWorkout(workout);
-      if (Platform.OS !== 'web') {
-        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       }
-      
+
+      // await DB.addWorkout(workout);
+      if (Platform.OS !== "web") {
+        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
+      }
+
       // Reset form
-      setDistance('');
-      setTime('');
-      setDate(new Date().toISOString().split('T')[0]);
-      
+      setDistance("")
+      setTime("")
+      setDate(new Date().toISOString().split("T")[0])
+
       //Mostrar mensaje de guardado
-      setSuccessMessage('Entrenamiento guardado de manera correcta');
-      
+      setSuccessMessage("Entrenamiento guardado de manera correcta")
+
       // Reset success message after 3 seconds
       setTimeout(() => {
-        setSuccessMessage('');
-      }, 3000);
+        setSuccessMessage("")
+      }, 3000)
     } catch (error) {
-      console.error('Error al guardar el entrenamiento', error);
-      Alert.alert('Error', 'Fallo al guardar el entrenamiento');
+      console.error("Error al guardar el entrenamiento", error)
+      Alert.alert("Error", "Fallo al guardar el entrenamiento")
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   return (
     <SafeAreaView
@@ -114,23 +120,20 @@ export default function LogScreen() {
     >
       <KeyboardAvoidingView
         style={{ flex: 1 }}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
+        behavior={Platform.OS === "ios" ? "padding" : undefined}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}
       >
         <ScrollView contentContainerStyle={styles.scrollContent}>
           <View style={styles.header}>
-            <Text
-              style={[
-                styles.title,
-                { color: Colors.text[colorScheme] },
-              ]}
-            >
+            <Text style={[styles.title, { color: Colors.text[colorScheme] }]}>
               Log Your Run
             </Text>
             <Text
               style={[
                 styles.subtitle,
-                { color: isDark ? Colors.text.darkDark : Colors.text.darkLight },
+                {
+                  color: isDark ? Colors.text.darkDark : Colors.text.darkLight,
+                },
               ]}
             >
               Checkea tu progreso y mira tus avances
@@ -139,14 +142,11 @@ export default function LogScreen() {
 
           <Card>
             <Text
-              style={[
-                styles.sectionTitle,
-                { color: Colors.text[colorScheme] },
-              ]}
+              style={[styles.sectionTitle, { color: Colors.text[colorScheme] }]}
             >
               Detalles de entrenamiento
             </Text>
-            
+
             <Input
               label="Date"
               value={date}
@@ -154,7 +154,7 @@ export default function LogScreen() {
               placeholder="YYYY-MM-DD"
               error={errors.date}
             />
-            
+
             <Input
               label="Distance (km)"
               value={distance}
@@ -163,7 +163,7 @@ export default function LogScreen() {
               keyboardType="numeric"
               error={errors.distance}
             />
-            
+
             <Input
               label="Time (minutes)"
               value={time}
@@ -172,16 +172,13 @@ export default function LogScreen() {
               keyboardType="numeric"
               error={errors.time}
             />
-            
+
             <Text
-              style={[
-                styles.typeLabel,
-                { color: Colors.text[colorScheme] },
-              ]}
+              style={[styles.typeLabel, { color: Colors.text[colorScheme] }]}
             >
-              Workout Type
+              Tipo de Entrenamiento
             </Text>
-            
+
             <View style={styles.typeContainer}>
               {workoutTypes.map((type) => (
                 <TouchableOpacity
@@ -193,8 +190,8 @@ export default function LogScreen() {
                         type === selectedType
                           ? Colors.primary[colorScheme]
                           : isDark
-                          ? '#2A2A2A'
-                          : '#F2F2F7',
+                          ? "#2A2A2A"
+                          : "#F2F2F7",
                     },
                   ]}
                   onPress={() => selectWorkoutType(type)}
@@ -205,7 +202,7 @@ export default function LogScreen() {
                       {
                         color:
                           type === selectedType
-                            ? '#000000'
+                            ? "#000000"
                             : Colors.text[colorScheme],
                       },
                     ]}
@@ -229,7 +226,7 @@ export default function LogScreen() {
               </View>
             ) : (
               <Button
-                title="Save Workout"
+                title="Guardar entrenamiento"
                 onPress={saveWorkout}
                 loading={isLoading}
                 style={styles.saveButton}
@@ -239,7 +236,7 @@ export default function LogScreen() {
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -254,7 +251,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 28,
-    fontWeight: '700',
+    fontWeight: "700",
     marginBottom: 4,
   },
   subtitle: {
@@ -263,17 +260,17 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 16,
   },
   typeLabel: {
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: "500",
     marginBottom: 12,
   },
   typeContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    flexWrap: "wrap",
     marginBottom: 24,
   },
   typeButton: {
@@ -285,17 +282,17 @@ const styles = StyleSheet.create({
   },
   typeButtonText: {
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   saveButton: {
     marginTop: 8,
   },
   successContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     marginTop: 16,
   },
   successMessage: {
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: "500",
   },
-});
+})

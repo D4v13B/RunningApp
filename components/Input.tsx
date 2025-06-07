@@ -1,29 +1,24 @@
-import React from 'react';
+import { Colors } from "@/constants/Colors"
+import React from "react"
 import {
-  View,
+  StyleSheet,
   Text,
   TextInput,
-  StyleSheet,
   TextInputProps,
+  View,
   ViewStyle,
   useColorScheme,
-} from 'react-native';
-import { Colors } from '@/constants/Colors';
+} from "react-native"
 
 interface InputProps extends TextInputProps {
-  label?: string;
-  error?: string;
-  containerStyle?: ViewStyle;
+  label?: string
+  error?: string
+  containerStyle?: ViewStyle
 }
 
-export function Input({
-  label,
-  error,
-  containerStyle,
-  ...props
-}: InputProps) {
-  const colorScheme = useColorScheme() || 'light';
-  const isDark = colorScheme === 'dark';
+export function Input({ label, error, containerStyle, ...props }: InputProps) {
+  const colorScheme = useColorScheme() || "light"
+  const isDark = colorScheme === "dark"
 
   return (
     <View style={[styles.container, containerStyle]}>
@@ -41,20 +36,20 @@ export function Input({
         style={[
           styles.input,
           {
-            backgroundColor: isDark ? '#2A2A2A' : '#F2F2F7',
+            backgroundColor: isDark ? "#2A2A2A" : "#F2F2F7",
             color: isDark ? Colors.text.dark : Colors.text.light,
             borderColor: error
               ? Colors.error[colorScheme]
               : isDark
-              ? '#3A3A3A'
-              : '#E5E5EA',
+              ? "#3A3A3A"
+              : "#E5E5EA",
           },
           props.editable === false && {
-            backgroundColor: isDark ? '#1A1A1A' : '#E5E5EA',
-            color: isDark ? '#8E8E93' : '#8E8E93',
+            backgroundColor: isDark ? "#1A1A1A" : "#E5E5EA",
+            color: isDark ? "#8E8E93" : "#8E8E93",
           },
         ]}
-        placeholderTextColor={isDark ? '#8E8E93' : '#8E8E93'}
+        placeholderTextColor={isDark ? "#8E8E93" : "#8E8E93"}
         {...props}
       />
       {error && (
@@ -63,7 +58,7 @@ export function Input({
         </Text>
       )}
     </View>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -73,7 +68,7 @@ const styles = StyleSheet.create({
   label: {
     marginBottom: 8,
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   input: {
     height: 48,
@@ -85,6 +80,6 @@ const styles = StyleSheet.create({
   error: {
     marginTop: 4,
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: "500",
   },
-});
+})

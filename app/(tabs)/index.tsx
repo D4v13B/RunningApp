@@ -1,13 +1,13 @@
-import { Card } from '@/components/Card';
-import { CircularProgress } from '@/components/CircularProgress';
-import { Dialog } from '@/components/Dialog';
-import { QuoteCard } from '@/components/QuoteCard';
-import { Colors } from '@/constants/Colors';
+import { Card } from "@/components/Card"
+import { CircularProgress } from "@/components/CircularProgress"
+import { Dialog } from "@/components/Dialog"
+import { QuoteCard } from "@/components/QuoteCard"
+import { Colors } from "@/constants/Colors"
 // import { getRandomQuote } from '@/constants/Quotes';
 // import { DB } from '@/services/DatabaseService';
-import { Storage } from '@/services/StorageService';
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import React, { useEffect, useState } from 'react';
+import { Storage } from "@/services/StorageService"
+import MaterialIcons from "@expo/vector-icons/MaterialIcons"
+import React, { useEffect, useState } from "react"
 import {
   RefreshControl,
   ScrollView,
@@ -16,68 +16,72 @@ import {
   TouchableOpacity,
   useColorScheme,
   View,
-} from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+} from "react-native"
+import { SafeAreaView } from "react-native-safe-area-context"
 
 export default function HomeScreen() {
-  const colorScheme = useColorScheme() || 'light';
-  const isDark = colorScheme === 'dark';
-  const [userName, setUserName] = useState('');
-  const [totalDistance, setTotalDistance] = useState(0);
-  const [goal, setGoal] = useState<{ description: string; target: number; currentProgress: number } | null>(null);
-  const [refreshing, setRefreshing] = useState(false);
-  const [quoteDialogVisible, setQuoteDialogVisible] = useState(false);
-  const [currentQuote, setCurrentQuote] = useState('');
+  const colorScheme = useColorScheme() || "light"
+  const isDark = colorScheme === "dark"
+  const [userName, setUserName] = useState("")
+  const [totalDistance, setTotalDistance] = useState(0)
+  const [goal, setGoal] = useState<{
+    description: string
+    target: number
+    currentProgress: number
+  } | null>(null)
+  const [refreshing, setRefreshing] = useState(false)
+  const [quoteDialogVisible, setQuoteDialogVisible] = useState(false)
+  const [currentQuote, setCurrentQuote] = useState("")
 
   // Load user data
   const loadUserData = async () => {
     try {
-      setRefreshing(true);
-      
+      setRefreshing(true)
+
       // Get user profile
-      const userProfile = await Storage.getUserProfile();
+      const userProfile = await Storage.getUserProfile()
       if (userProfile) {
-        setUserName(userProfile.name);
+        setUserName(userProfile.name)
       }
-      
+
       // Get total distance
       // const distance = await DB.getTotalDistance();
       // setTotalDistance(distance);
       setTotalDistance(10)
-      
+
       // Get active goal
       // const activeGoal = await DB.getActiveGoal();
       // if (activeGoal) {
-        // setGoal({
-          // description: activeGoal.description,
-          // target: activeGoal.target,
-          // currentProgress: activeGoal.currentProgress,
-        // });
+      // setGoal({
+      // description: activeGoal.description,
+      // target: activeGoal.target,
+      // currentProgress: activeGoal.currentProgress,
+      // });
       // }
       setGoal({
         description: "Comer Sano",
         target: 34,
-        currentProgress: 100
+        currentProgress: 100,
       })
     } catch (error) {
-      console.error('Error loading data:', error);
+      console.error("Error loading data:", error)
     } finally {
-      setRefreshing(false);
+      setRefreshing(false)
     }
-  };
+  }
 
   // Load data on mount
   useEffect(() => {
-    loadUserData();
-  }, []);
+    loadUserData()
+  }, [])
 
   // Show quote dialog
   const showQuoteDialog = () => {
     // const quote = getRandomQuote();
     // setCurrentQuote(quote);
-    setCurrentQuote("Tu puedes papito");
-    setQuoteDialogVisible(true);
-  };
+    setCurrentQuote("Tu puedes papito")
+    setQuoteDialogVisible(true)
+  }
 
   return (
     <SafeAreaView
@@ -93,12 +97,7 @@ export default function HomeScreen() {
         }
       >
         <View style={styles.header}>
-          <Text
-            style={[
-              styles.greeting,
-              { color: Colors.text[colorScheme] },
-            ]}
-          >
+          <Text style={[styles.greeting, { color: Colors.text[colorScheme] }]}>
             Hola, {userName}! 👋
           </Text>
           <Text
@@ -115,17 +114,14 @@ export default function HomeScreen() {
           <Card style={styles.goalCard}>
             <View style={styles.goalHeader}>
               <Text
-                style={[
-                  styles.goalTitle,
-                  { color: Colors.text[colorScheme] },
-                ]}
+                style={[styles.goalTitle, { color: Colors.text[colorScheme] }]}
               >
                 Progreso del objetivo mensual
               </Text>
               {/* <Lightning color={Colors.primary[colorScheme]} size={20} /> */}
-              <MaterialIcons name='light'/>
+              <MaterialIcons name="light" />
             </View>
-            
+
             <View style={styles.goalContent}>
               <View style={styles.progressContainer}>
                 <CircularProgress
@@ -134,7 +130,7 @@ export default function HomeScreen() {
                   progress={goal.currentProgress / goal.target}
                 />
               </View>
-              
+
               <View style={styles.goalDetails}>
                 <Text
                   style={[
@@ -147,7 +143,11 @@ export default function HomeScreen() {
                 <Text
                   style={[
                     styles.goalProgress,
-                    { color: isDark ? Colors.text.darkDark : Colors.text.darkLight },
+                    {
+                      color: isDark
+                        ? Colors.text.darkDark
+                        : Colors.text.darkLight,
+                    },
                   ]}
                 >
                   {goal.currentProgress.toFixed(1)} km of {goal.target} km
@@ -159,47 +159,49 @@ export default function HomeScreen() {
 
         <Card style={styles.statsCard}>
           <Text
-            style={[
-              styles.statsTitle,
-              { color: Colors.text[colorScheme] },
-            ]}
+            style={[styles.statsTitle, { color: Colors.text[colorScheme] }]}
           >
             Tus estadisticas
           </Text>
-          
+
           <View style={styles.statsRow}>
             <View style={styles.stat}>
               <Text
-                style={[
-                  styles.statValue,
-                  { color: Colors.text[colorScheme] },
-                ]}
+                style={[styles.statValue, { color: Colors.text[colorScheme] }]}
               >
                 {totalDistance.toFixed(1)} km
               </Text>
               <Text
                 style={[
                   styles.statLabel,
-                  { color: isDark ? Colors.text.darkDark : Colors.text.darkLight },
+                  {
+                    color: isDark
+                      ? Colors.text.darkDark
+                      : Colors.text.darkLight,
+                  },
                 ]}
               >
                 Total Distance
               </Text>
             </View>
-            
+
             <View style={styles.stat}>
               <Text
-                style={[
-                  styles.statValue,
-                  { color: Colors.text[colorScheme] },
-                ]}
+                style={[styles.statValue, { color: Colors.text[colorScheme] }]}
               >
-                {goal ? ((goal.currentProgress / goal.target) * 100).toFixed(0) : '0'}%
+                {goal
+                  ? ((goal.currentProgress / goal.target) * 100).toFixed(0)
+                  : "0"}
+                %
               </Text>
               <Text
                 style={[
                   styles.statLabel,
-                  { color: isDark ? Colors.text.darkDark : Colors.text.darkLight },
+                  {
+                    color: isDark
+                      ? Colors.text.darkDark
+                      : Colors.text.darkLight,
+                  },
                 ]}
               >
                 Progreso de Objetivo
@@ -219,7 +221,11 @@ export default function HomeScreen() {
                 size={24}
                 color={Colors.primary[colorScheme]}
               /> */}
-              <MaterialIcons name='message' color={Colors.primary[colorScheme]} size={24}/>
+              <MaterialIcons
+                name="message"
+                color={Colors.primary[colorScheme]}
+                size={24}
+              />
               <Text
                 style={[
                   styles.quoteButtonText,
@@ -232,7 +238,7 @@ export default function HomeScreen() {
           </Card>
         </TouchableOpacity>
       </ScrollView>
-      
+
       <Dialog
         visible={quoteDialogVisible}
         title="Dale duro papito"
@@ -241,7 +247,7 @@ export default function HomeScreen() {
         <QuoteCard quote={currentQuote} />
       </Dialog>
     </SafeAreaView>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -256,7 +262,7 @@ const styles = StyleSheet.create({
   },
   greeting: {
     fontSize: 28,
-    fontWeight: '700',
+    fontWeight: "700",
     marginBottom: 4,
   },
   subtitle: {
@@ -266,18 +272,18 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   goalHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 16,
   },
   goalTitle: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   goalContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   progressContainer: {
     marginRight: 16,
@@ -287,7 +293,7 @@ const styles = StyleSheet.create({
   },
   goalDescription: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 4,
   },
   goalProgress: {
@@ -298,20 +304,20 @@ const styles = StyleSheet.create({
   },
   statsTitle: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 16,
   },
   statsRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   stat: {
-    alignItems: 'center',
+    alignItems: "center",
     flex: 1,
   },
   statValue: {
     fontSize: 20,
-    fontWeight: '700',
+    fontWeight: "700",
     marginBottom: 4,
   },
   statLabel: {
@@ -324,14 +330,14 @@ const styles = StyleSheet.create({
     padding: 0,
   },
   quoteButtonContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     padding: 16,
   },
   quoteButtonText: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
     marginLeft: 8,
   },
-});
+})
