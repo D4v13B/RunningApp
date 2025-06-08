@@ -15,50 +15,29 @@ import {
 } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
 // import { CircularProgress } from '@/components/CircularProgress';
-import { Goal } from "@/services/DatabaseService"
-import * as Haptics from "expo-haptics"
+import { DatabaseService, Goal } from '@/services/DatabaseService'
+import * as Haptics from 'expo-haptics'
 
 export default function GoalsScreen() {
-  const colorScheme = useColorScheme() || "light"
-  const isDark = colorScheme === "dark"
-
-  const [goals, setGoals] = useState<Goal[]>([])
-  const [description, setDescription] = useState("")
-  const [target, setTarget] = useState("")
-  const [deadline, setDeadline] = useState("")
-  const [errors, setErrors] = useState<Record<string, string>>({})
-  const [isLoading, setIsLoading] = useState(false)
-  const [refreshing, setRefreshing] = useState(false)
-  const [successMessage, setSuccessMessage] = useState("")
+  const colorScheme = useColorScheme() || 'light';
+  const isDark = colorScheme === 'dark';
+  
+  const [goals, setGoals] = useState<Goal[]>([]);
+  const [description, setDescription] = useState('');
+  const [target, setTarget] = useState('');
+  const [deadline, setDeadline] = useState('');
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [isLoading, setIsLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
+  const DB = new DatabaseService();
 
   // Load goals
   const loadGoals = async () => {
     try {
-      setRefreshing(true)
-      // const data = await DB.getGoals();
-      setGoals([
-        {
-          id: 1,
-          target: 10,
-          description: "Correr 10 km papito",
-          deadline: "2025-12-25",
-          currentProgress: 3,
-        },
-        {
-          id: 2,
-          target: 10,
-          description: "Correr 10 km papito",
-          deadline: "2025-12-25",
-          currentProgress: 3,
-        },
-        {
-          id: 3,
-          target: 10,
-          description: "Correr 10 km papito",
-          deadline: "2025-12-25",
-          currentProgress: 3,
-        },
-      ])
+      setRefreshing(true);
+      const data = await DB.getGoals();
+      setGoals(data);
     } catch (error) {
       console.error("Error loading goals:", error)
     } finally {
@@ -117,10 +96,10 @@ export default function GoalsScreen() {
         target: Number(target),
         currentProgress: 0,
         deadline,
-      }
-
-      // await DB.addGoal(newGoal);
-
+      };
+      
+        await DB.addGoal(newGoal);
+      
       // Haptics para dar feedback de que se guardo
       if (Platform.OS !== "web") {
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
