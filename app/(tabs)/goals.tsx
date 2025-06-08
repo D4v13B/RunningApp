@@ -15,29 +15,36 @@ import {
 } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
 // import { CircularProgress } from '@/components/CircularProgress';
-import { DatabaseService, Goal } from '@/services/DatabaseService'
-import * as Haptics from 'expo-haptics'
+import MultiselectTypeWorkout from "@/components/MultiselectTypeWorkout"
+import {
+  DatabaseService,
+  Goal,
+  WorkoutGoalsType,
+} from "@/services/DatabaseService"
+import * as Haptics from "expo-haptics"
+import { workoutTypes } from "./log"
 
 export default function GoalsScreen() {
-  const colorScheme = useColorScheme() || 'light';
-  const isDark = colorScheme === 'dark';
-  
-  const [goals, setGoals] = useState<Goal[]>([]);
-  const [description, setDescription] = useState('');
-  const [target, setTarget] = useState('');
-  const [deadline, setDeadline] = useState('');
-  const [errors, setErrors] = useState<Record<string, string>>({});
-  const [isLoading, setIsLoading] = useState(false);
-  const [refreshing, setRefreshing] = useState(false);
-  const [successMessage, setSuccessMessage] = useState('');
-  const DB = new DatabaseService();
+  const colorScheme = useColorScheme() || "light"
+  const isDark = colorScheme === "dark"
+
+  const [goals, setGoals] = useState<Goal[]>([])
+  const [description, setDescription] = useState("")
+  const [target, setTarget] = useState("")
+  const [deadline, setDeadline] = useState("")
+  const [errors, setErrors] = useState<Record<string, string>>({})
+  const [isLoading, setIsLoading] = useState(false)
+  const [refreshing, setRefreshing] = useState(false)
+  const [successMessage, setSuccessMessage] = useState("")
+  const [selectedType, setSelectedType] = useState<WorkoutGoalsType>("Run")
+  const DB = new DatabaseService()
 
   // Load goals
   const loadGoals = async () => {
     try {
-      setRefreshing(true);
-      const data = await DB.getGoals();
-      setGoals(data);
+      setRefreshing(true)
+      const data = await DB.getGoals()
+      setGoals(data)
     } catch (error) {
       console.error("Error loading goals:", error)
     } finally {
@@ -95,11 +102,13 @@ export default function GoalsScreen() {
         description: description.trim(),
         target: Number(target),
         currentProgress: 0,
+        type: selectedType,
         deadline,
-      };
-      
-        await DB.addGoal(newGoal);
-      
+        isActive: 1
+      }
+
+      await DB.addGoal(newGoal)
+
       // Haptics para dar feedback de que se guardo
       if (Platform.OS !== "web") {
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
@@ -220,6 +229,12 @@ export default function GoalsScreen() {
               variant="input"
             />*/}
 
+            <MultiselectTypeWorkout
+              workoutTypes={workoutTypes}
+              setSelectedType={setSelectedType}
+              selectedType={selectedType}
+            />
+
             {successMessage ? (
               <View style={styles.successContainer}>
                 <Text
@@ -233,7 +248,7 @@ export default function GoalsScreen() {
               </View>
             ) : (
               <Button
-                title="Save Goal"
+                title="Guardar meta"
                 onPress={saveGoal}
                 loading={isLoading}
                 style={styles.saveButton}
@@ -271,7 +286,7 @@ export default function GoalsScreen() {
                         { color: Colors.text[colorScheme] },
                       ]}
                     >
-                      {goal.description}
+                      {goal.description} {goal.type ? "- " + goal.type : ""}
                     </Text>
                     <Text
                       style={[

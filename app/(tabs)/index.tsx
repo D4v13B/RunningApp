@@ -3,11 +3,12 @@ import { CircularProgress } from "@/components/CircularProgress"
 import { Dialog } from "@/components/Dialog"
 import { QuoteCard } from "@/components/QuoteCard"
 import { Colors } from "@/constants/Colors"
+import { DatabaseService } from "@/services/DatabaseService"
 // import { getRandomQuote } from '@/constants/Quotes';
 // import { DatabaseService } from '@/services/DatabaseService';
-import { Storage } from '@/services/StorageService'
-import MaterialIcons from '@expo/vector-icons/MaterialIcons'
-import React, { useEffect, useState } from 'react'
+import { Storage } from "@/services/StorageService"
+import MaterialIcons from "@expo/vector-icons/MaterialIcons"
+import React, { useEffect, useState } from "react"
 import {
   RefreshControl,
   ScrollView,
@@ -22,6 +23,8 @@ import { SafeAreaView } from "react-native-safe-area-context"
 export default function HomeScreen() {
   const colorScheme = useColorScheme() || "light"
   const isDark = colorScheme === "dark"
+  const DB = new DatabaseService()
+
   const [userName, setUserName] = useState("")
   const [totalDistance, setTotalDistance] = useState(0)
   const [goal, setGoal] = useState<{
@@ -32,6 +35,10 @@ export default function HomeScreen() {
   const [refreshing, setRefreshing] = useState(false)
   const [quoteDialogVisible, setQuoteDialogVisible] = useState(false)
   const [currentQuote, setCurrentQuote] = useState("")
+
+  const clearTables = () => {
+    DB.truncateTables()
+  }
 
   // Load user data
   const loadUserData = async () => {
@@ -44,25 +51,23 @@ export default function HomeScreen() {
         setUserName(userProfile.name)
       }
 
-      // Get total distance
-      // const distance = await DB.getTotalDistance();
-      // setTotalDistance(distance);
-      setTotalDistance(10)
+      const distance = await DB.getTotalDistance()
+      setTotalDistance(distance)
+      // setTotalDistance(10)
 
-      // Get active goal
-      // const activeGoal = await DB.getActiveGoal();
-      // if (activeGoal) {
+      const activeGoal = await DB.getActiveGoal()
+      if (activeGoal) {
+        setGoal({
+          description: activeGoal.description,
+          target: activeGoal.target,
+          currentProgress: activeGoal.currentProgress,
+        })
+      }
       // setGoal({
-      // description: activeGoal.description,
-      // target: activeGoal.target,
-      // currentProgress: activeGoal.currentProgress,
-      // });
-      // }
-      setGoal({
-        description: "Comer Sano",
-        target: 34,
-        currentProgress: 100,
-      })
+      //   description: "Comer Sano",
+      //   target: 34,
+      //   currentProgress: 100,
+      // })
     } catch (error) {
       console.error("Error loading data:", error)
     } finally {
@@ -119,7 +124,14 @@ export default function HomeScreen() {
                 Progreso del objetivo mensual
               </Text>
               {/* <Lightning color={Colors.primary[colorScheme]} size={20} /> */}
-              <MaterialIcons name="light" />
+              <MaterialIcons
+                name="light"
+                color={Colors.primary[colorScheme]}
+                size={20}
+              />
+              <TouchableOpacity onPress={clearTables}>
+                <MaterialIcons name="track-changes" />
+              </TouchableOpacity>
             </View>
 
             <View style={styles.goalContent}>

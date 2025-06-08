@@ -1,8 +1,13 @@
 import { Button } from "@/components/Button"
 import { Card } from "@/components/Card"
 import { Input } from "@/components/Input"
+import MultiselectTypeWorkout from "@/components/MultiselectTypeWorkout"
 import { Colors } from "@/constants/Colors"
-import { Workout, WorkoutGoalsType } from "@/services/DatabaseService"
+import {
+  DatabaseService,
+  Workout,
+  WorkoutGoalsType,
+} from "@/services/DatabaseService"
 import * as Haptics from "expo-haptics"
 import React, { useState } from "react"
 import {
@@ -12,13 +17,12 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  TouchableOpacity,
   useColorScheme,
-  View,
+  View
 } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
 
-const workoutTypes: WorkoutGoalsType[] = [
+export const workoutTypes: WorkoutGoalsType[] = [
   "Run",
   "Jog",
   "Sprint",
@@ -30,6 +34,7 @@ const workoutTypes: WorkoutGoalsType[] = [
 export default function LogScreen() {
   const colorScheme = useColorScheme() || "light"
   const isDark = colorScheme === "dark"
+  const DB = new DatabaseService()
 
   const [date, setDate] = useState(new Date().toISOString().split("T")[0])
   const [distance, setDistance] = useState("")
@@ -39,7 +44,6 @@ export default function LogScreen() {
   const [isLoading, setIsLoading] = useState(false)
   const [successMessage, setSuccessMessage] = useState("")
 
-  // Handle workout type selection
   const selectWorkoutType = (type: WorkoutGoalsType) => {
     setSelectedType(type)
     if (Platform.OS !== "web") {
@@ -64,7 +68,7 @@ export default function LogScreen() {
     if (!time) {
       newErrors.time = "Tiempo es requerido"
     } else if (isNaN(Number(time)) || Number(time) <= 0) {
-      newErrors.time = "Por favir inserta un tiempo en minutos requerido"
+      newErrors.time = "Por favor inserta un tiempo en minutos requerido"
     }
 
     setErrors(newErrors)
@@ -84,9 +88,10 @@ export default function LogScreen() {
         distance: Number(distance),
         time: Number(time),
         type: selectedType,
+        pace: Number(distance) / Number(time)
       }
 
-      // await DB.addWorkout(workout);
+      await DB.addWorkout(workout)
       if (Platform.OS !== "web") {
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
       }
@@ -126,7 +131,7 @@ export default function LogScreen() {
         <ScrollView contentContainerStyle={styles.scrollContent}>
           <View style={styles.header}>
             <Text style={[styles.title, { color: Colors.text[colorScheme] }]}>
-              Log Your Run
+              Guarda tu recorrido
             </Text>
             <Text
               style={[
@@ -173,7 +178,7 @@ export default function LogScreen() {
               error={errors.time}
             />
 
-            <Text
+            {/* <Text
               style={[styles.typeLabel, { color: Colors.text[colorScheme] }]}
             >
               Tipo de Entrenamiento
@@ -211,7 +216,8 @@ export default function LogScreen() {
                   </Text>
                 </TouchableOpacity>
               ))}
-            </View>
+            </View> */}
+            <MultiselectTypeWorkout selectedType={selectedType} setSelectedType={setSelectedType} workoutTypes={workoutTypes}/>
 
             {successMessage ? (
               <View style={styles.successContainer}>

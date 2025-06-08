@@ -11,7 +11,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context"
 // import { WorkoutCard } from '@/components/WorkoutCard';
 import { WorkoutCard } from "@/components/WorkoutCard"
-import { Workout } from "@/services/DatabaseService"
+import { DatabaseService, Workout } from "@/services/DatabaseService"
 
 export default function HistoryScreen() {
   const colorScheme = useColorScheme() || "light"
@@ -19,33 +19,33 @@ export default function HistoryScreen() {
   const [refreshing, setRefreshing] = useState(false)
   const [totalWorkouts, setTotalWorkouts] = useState(0)
   const [totalDistance, setTotalDistance] = useState(0)
+  const DB = new DatabaseService()
 
   // Load workouts
   const loadWorkouts = async () => {
     try {
       setRefreshing(true)
-      // const data = await DB.getWorkouts();
-      const data: Workout[] = [
-        {
-          id: 1,
-          pace: 2,
-          time: 140,
-          type: "Run",
-          date: "2025-12-25",
-          distance: 10,
-        },
-        {
-          id: 2,
-          pace: 2,
-          time: 140,
-          type: "Run",
-          date: "2025-12-25",
-          distance: 10,
-        },
-      ]
+      const data = await DB.getWorkouts()
+      // const data: Workout[] = [
+      //   {
+      //     id: 1,
+      //     pace: 2,
+      //     time: 140,
+      //     type: "Run",
+      //     date: "2025-12-25",
+      //     distance: 10,
+      //   },
+      //   {
+      //     id: 2,
+      //     pace: 2,
+      //     time: 140,
+      //     type: "Run",
+      //     date: "2025-12-25",
+      //     distance: 10,
+      //   },
+      // ]
       setWorkouts(data)
 
-      // Calculate totals
       setTotalWorkouts(data.length)
       const distance = data.reduce((sum, workout) => sum + workout.distance, 0)
       setTotalDistance(distance)

@@ -1,31 +1,38 @@
-import * as SQLite from 'expo-sqlite';
+import * as SQLite from "expo-sqlite"
 
-export type WorkoutGoalsType = "Run" | "Jog" | "Sprint" | "Trail" | "Interval" | "Race";
+export type WorkoutGoalsType =
+  | "Run"
+  | "Jog"
+  | "Sprint"
+  | "Trail"
+  | "Interval"
+  | "Race"
 
 export interface Workout {
-  id?: number;
-  date: string;
-  distance: number;
-  time: number;
-  type: WorkoutGoalsType;
-  pace?: number;
+  id?: number
+  date: string
+  distance: number
+  time: number
+  type: WorkoutGoalsType
+  pace?: number
 }
 
 export interface Goal {
-  id?: number;
-  description: string;
-  target: number;
-  currentProgress: number;
-  type?: WorkoutGoalsType;
-  deadline: string;
+  id?: number
+  description: string
+  target: number
+  currentProgress: number
+  type?: WorkoutGoalsType
+  deadline: string
+  isActive: number
 }
 
 export class DatabaseService {
-  private db: SQLite.SQLiteDatabase;
+  private db: SQLite.SQLiteDatabase
 
   constructor() {
-    this.db = SQLite.openDatabaseSync('runningApp.db');
-    this.initDatabase();
+    this.db = SQLite.openDatabaseSync("runningApp.db")
+    this.initDatabase()
   }
 
   private initDatabase() {
@@ -39,7 +46,7 @@ export class DatabaseService {
         type TEXT NOT NULL,
         pace REAL
       );
-    `);
+    `)
 
     // Crear tabla de goals
     this.db.execAsync(`
@@ -52,11 +59,16 @@ export class DatabaseService {
         deadline TEXT NOT NULL,
         isActive INTEGER DEFAULT 1
       );
-    `);
+    `)
+  }
+
+  truncateTables() {
+    this.db.execAsync("DELETE FROM workouts")
+    this.db.execAsync("DELETE FROM goals")
   }
 
   // Agregar un nuevo workout
-  addWorkout(workout: Omit<Workout, 'id'>): number {
+  addWorkout(workout: Omit<Workout, "id">): number {
     try {
       const result = this.db.runSync(
         `INSERT INTO workouts (date, distance, time, type, pace) 
@@ -66,16 +78,16 @@ export class DatabaseService {
           workout.distance,
           workout.time,
           workout.type,
-          workout.pace || null
+          workout.pace || null,
         ]
-      );
+      )
 
-      this.updateGoalsType(workout.type, workout.distance);
+      this.updateGoalsType(workout.type, workout.distance)
 
-      return result.lastInsertRowId;
+      return result.lastInsertRowId
     } catch (error) {
-      console.error('Error adding workout:', error);
-      throw error;
+      console.error("Error adding workout:", error)
+      throw error
     }
   }
 
@@ -86,12 +98,12 @@ export class DatabaseService {
         `SELECT *
          FROM workouts 
          ORDER BY date DESC`
-      ) as Workout[];
-      
-      return result;
+      ) as Workout[]
+
+      return result
     } catch (error) {
-      console.error('Error getting workouts:', error);
-      throw error;
+      console.error("Error getting workouts:", error)
+      throw error
     }
   }
 
@@ -100,17 +112,17 @@ export class DatabaseService {
     try {
       const result = this.db.getFirstSync(
         `SELECT COALESCE(SUM(distance), 0) as totalDistance FROM workouts`
-      ) as { totalDistance: number };
-      
-      return result.totalDistance;
+      ) as { totalDistance: number }
+
+      return result.totalDistance
     } catch (error) {
-      console.error('Error getting total distance:', error);
-      throw error;
+      console.error("Error getting total distance:", error)
+      throw error
     }
   }
 
   // Agregar una nueva meta
-  addGoal(goal: Omit<Goal, 'id'>): number {
+  addGoal(goal: Omit<Goal, "id">): number {
     try {
       const result = this.db.runSync(
         `INSERT INTO goals (description, target, currentProgress, type, deadline, isActive) 
@@ -120,13 +132,13 @@ export class DatabaseService {
           goal.target,
           goal.currentProgress,
           goal.type || null,
-          goal.deadline
+          goal.deadline,
         ]
-      );
-      return result.lastInsertRowId;
+      )
+      return result.lastInsertRowId
     } catch (error) {
-      console.error('Error adding goal:', error);
-      throw error;
+      console.error("Error adding goal:", error)
+      throw error
     }
   }
 
@@ -138,12 +150,12 @@ export class DatabaseService {
          SET currentProgress = currentProgress + ? 
          WHERE id = ?`,
         [progressToAdd, goalId]
-      );
-      
-      return result.changes > 0;
+      )
+
+      return result.changes > 0
     } catch (error) {
-      console.error('Error updating goal progress:', error);
-      throw error;
+      console.error("Error updating goal progress:", error)
+      throw error
     }
   }
 
@@ -154,12 +166,12 @@ export class DatabaseService {
          SET currentProgress = currentProgress + ? 
          WHERE type = ? AND deadline >= date('now')`,
         [progressToAdd, type]
-      );
-      
-      return result.changes > 0;
+      )
+
+      return result.changes > 0
     } catch (error) {
-      console.error('Error updating goal progress:', error);
-      throw error;
+      console.error("Error updating goal progress:", error)
+      throw error
     }
   }
 
@@ -170,12 +182,12 @@ export class DatabaseService {
         `SELECT id, description, target, currentProgress, type, deadline 
          FROM goals 
          ORDER BY deadline ASC`
-      ) as Goal[];
-      
-      return result;
+      ) as Goal[]
+
+      return result
     } catch (error) {
-      console.error('Error getting goals:', error);
-      throw error;
+      console.error("Error getting goals:", error)
+      throw error
     }
   }
 
@@ -188,12 +200,12 @@ export class DatabaseService {
          WHERE isActive = 1 
          ORDER BY deadline ASC 
          LIMIT 1`
-      ) as Goal | null;
-      
-      return result;
+      ) as Goal | null
+
+      return result
     } catch (error) {
-      console.error('Error getting active goal:', error);
-      throw error;
+      console.error("Error getting active goal:", error)
+      throw error
     }
   }
 
@@ -205,11 +217,11 @@ export class DatabaseService {
       const result = this.db.runSync(
         `UPDATE goals SET isActive = 0 WHERE id = ?`,
         [goalId]
-      );
-      return result.changes > 0;
+      )
+      return result.changes > 0
     } catch (error) {
-      console.error('Error marking goal as completed:', error);
-      throw error;
+      console.error("Error marking goal as completed:", error)
+      throw error
     }
   }
 
@@ -222,12 +234,12 @@ export class DatabaseService {
          WHERE type = ? 
          ORDER BY date DESC`,
         [type]
-      ) as Workout[];
-      
-      return result;
+      ) as Workout[]
+
+      return result
     } catch (error) {
-      console.error('Error getting workouts by type:', error);
-      throw error;
+      console.error("Error getting workouts by type:", error)
+      throw error
     }
   }
 
@@ -239,24 +251,24 @@ export class DatabaseService {
          FROM workouts 
          WHERE type = ?`,
         [type]
-      ) as { totalDistance: number };
-      
-      return result.totalDistance;
+      ) as { totalDistance: number }
+
+      return result.totalDistance
     } catch (error) {
-      console.error('Error getting total distance by type:', error);
-      throw error;
+      console.error("Error getting total distance by type:", error)
+      throw error
     }
   }
 
   // Obtener estadísticas del mes actual
   getCurrentMonthStats(): {
-    totalDistance: number;
-    totalWorkouts: number;
-    averagePace: number;
+    totalDistance: number
+    totalWorkouts: number
+    averagePace: number
   } {
     try {
-      const currentMonth = new Date().toISOString().slice(0, 7); // YYYY-MM
-      
+      const currentMonth = new Date().toISOString().slice(0, 7) // YYYY-MM
+
       const result = this.db.getFirstSync(
         `SELECT 
            COALESCE(SUM(distance), 0) as totalDistance,
@@ -266,15 +278,15 @@ export class DatabaseService {
          WHERE date LIKE ?`,
         [`${currentMonth}%`]
       ) as {
-        totalDistance: number;
-        totalWorkouts: number;
-        averagePace: number;
-      };
-      
-      return result;
+        totalDistance: number
+        totalWorkouts: number
+        averagePace: number
+      }
+
+      return result
     } catch (error) {
-      console.error('Error getting current month stats:', error);
-      throw error;
+      console.error("Error getting current month stats:", error)
+      throw error
     }
   }
 }
