@@ -9,7 +9,7 @@ export default function Index() {
   useEffect(() => {
     const checkFirstLaunch = async () => {
       try {
-        const result = false;
+        const result = true;
         setIsFirstLaunch(result);
       } catch (e) {
         console.error(e);

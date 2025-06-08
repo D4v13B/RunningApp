@@ -4,7 +4,7 @@ import { Dialog } from '@/components/Dialog';
 import { QuoteCard } from '@/components/QuoteCard';
 import { Colors } from '@/constants/Colors';
 // import { getRandomQuote } from '@/constants/Quotes';
-// import { DB } from '@/services/DatabaseService';
+// import { DatabaseService } from '@/services/DatabaseService';
 import { Storage } from '@/services/StorageService';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import React, { useEffect, useState } from 'react';

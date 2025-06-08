@@ -17,6 +17,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 // import { CircularProgress } from '@/components/CircularProgress';
 import { Goal } from '@/services/DatabaseService';
 import * as Haptics from 'expo-haptics';
+import { DatabaseService } from '@/services/DatabaseService';
 
 export default function GoalsScreen() {
   const colorScheme = useColorScheme() || 'light';
@@ -30,13 +31,14 @@ export default function GoalsScreen() {
   const [isLoading, setIsLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
+  const DB = new DatabaseService();
 
   // Load goals
   const loadGoals = async () => {
     try {
       setRefreshing(true);
-      // const data = await DB.getGoals();
-      // setGoals(data);
+      const data = await DB.getGoals();
+      setGoals(data);
     } catch (error) {
       console.error('Error loading goals:', error);
     } finally {
@@ -97,7 +99,7 @@ export default function GoalsScreen() {
         deadline,
       };
       
-      // await DB.addGoal(newGoal);
+        await DB.addGoal(newGoal);
       
       // Haptics para dar feedback de que se guardo
       if (Platform.OS !== 'web') {
