@@ -27,6 +27,7 @@ const MultiselectTypeWorkout = ({
 
   const selectWorkoutType = (type: WorkoutGoalsType) => {
     setSelectedType(type)
+    console.log("Holas")
     if (Platform.OS !== "web") {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
     }

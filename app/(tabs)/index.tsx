@@ -3,7 +3,7 @@ import { CircularProgress } from "@/components/CircularProgress"
 import { Dialog } from "@/components/Dialog"
 import { QuoteCard } from "@/components/QuoteCard"
 import { Colors } from "@/constants/Colors"
-import { DatabaseService } from "@/services/DatabaseService"
+import { DB } from "@/services/DatabaseService"
 // import { getRandomQuote } from '@/constants/Quotes';
 // import { DatabaseService } from '@/services/DatabaseService';
 import { Storage } from "@/services/StorageService"
@@ -23,7 +23,6 @@ import { SafeAreaView } from "react-native-safe-area-context"
 export default function HomeScreen() {
   const colorScheme = useColorScheme() || "light"
   const isDark = colorScheme === "dark"
-  const DB = new DatabaseService()
 
   const [userName, setUserName] = useState("")
   const [totalDistance, setTotalDistance] = useState(0)
@@ -75,7 +74,6 @@ export default function HomeScreen() {
     }
   }
 
-  // Load data on mount
   useEffect(() => {
     loadUserData()
   }, [])

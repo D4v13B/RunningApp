@@ -17,9 +17,9 @@ import { SafeAreaView } from "react-native-safe-area-context"
 // import { CircularProgress } from '@/components/CircularProgress';
 import MultiselectTypeWorkout from "@/components/MultiselectTypeWorkout"
 import {
-  DatabaseService,
+  DB,
   Goal,
-  WorkoutGoalsType,
+  WorkoutGoalsType
 } from "@/services/DatabaseService"
 import * as Haptics from "expo-haptics"
 import { workoutTypes } from "./log"
@@ -37,7 +37,6 @@ export default function GoalsScreen() {
   const [refreshing, setRefreshing] = useState(false)
   const [successMessage, setSuccessMessage] = useState("")
   const [selectedType, setSelectedType] = useState<WorkoutGoalsType>("Run")
-  const DB = new DatabaseService()
 
   // Load goals
   const loadGoals = async () => {

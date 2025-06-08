@@ -11,7 +11,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context"
 // import { WorkoutCard } from '@/components/WorkoutCard';
 import { WorkoutCard } from "@/components/WorkoutCard"
-import { DatabaseService, Workout } from "@/services/DatabaseService"
+import { DB, Workout } from "@/services/DatabaseService"
 
 export default function HistoryScreen() {
   const colorScheme = useColorScheme() || "light"
@@ -19,7 +19,6 @@ export default function HistoryScreen() {
   const [refreshing, setRefreshing] = useState(false)
   const [totalWorkouts, setTotalWorkouts] = useState(0)
   const [totalDistance, setTotalDistance] = useState(0)
-  const DB = new DatabaseService()
 
   // Load workouts
   const loadWorkouts = async () => {

@@ -1,4 +1,4 @@
-// app/index.tsx
+import { Storage } from "@/services/StorageService"
 import { Redirect } from "expo-router"
 import { useEffect, useState } from "react"
 import { ActivityIndicator, View } from "react-native"
@@ -9,7 +9,7 @@ export default function Index() {
   useEffect(() => {
     const checkFirstLaunch = async () => {
       try {
-        const result = false
+        const result = await Storage.isFirstLaunch()
         setIsFirstLaunch(result)
       } catch (e) {
         console.error(e)

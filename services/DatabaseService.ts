@@ -68,9 +68,9 @@ export class DatabaseService {
   }
 
   // Agregar un nuevo workout
-  addWorkout(workout: Omit<Workout, "id">): number {
+  async addWorkout(workout: Omit<Workout, "id">): Promise<number> {
     try {
-      const result = this.db.runSync(
+      const result = await this.db.runAsync(
         `INSERT INTO workouts (date, distance, time, type, pace) 
          VALUES (?, ?, ?, ?, ?)`,
         [
@@ -92,9 +92,9 @@ export class DatabaseService {
   }
 
   // Obtener historial de workouts
-  getWorkouts(): Workout[] {
+  async getWorkouts(): Promise<Workout[]> {
     try {
-      const result = this.db.getAllSync(
+      const result = await this.db.getAllAsync(
         `SELECT *
          FROM workouts 
          ORDER BY date DESC`
@@ -108,11 +108,13 @@ export class DatabaseService {
   }
 
   // Calcular distancia total del historial
-  getTotalDistance(): number {
+  async getTotalDistance(): Promise<number> {
     try {
-      const result = this.db.getFirstSync(
+      const result = await this.db.getFirstAsync(
         `SELECT COALESCE(SUM(distance), 0) as totalDistance FROM workouts`
       ) as { totalDistance: number }
+
+      if(!result.totalDistance) return 0
 
       return result.totalDistance
     } catch (error) {
@@ -192,9 +194,9 @@ export class DatabaseService {
   }
 
   // Obtener meta activa (asumiendo que solo hay una activa a la vez)
-  getActiveGoal(): Goal | null {
+  async getActiveGoal(): Promise<Goal | null> {
     try {
-      const result = this.db.getFirstSync(
+      const result = await this.db.getFirstAsync(
         `SELECT id, description, target, currentProgress, type, deadline 
          FROM goals 
          WHERE isActive = 1 
@@ -244,7 +246,7 @@ export class DatabaseService {
   }
 
   // Obtener distancia total por tipo de workout
-  getTotalDistanceByType(type: WorkoutGoalsType): number {
+  async getTotalDistanceByType(type: WorkoutGoalsType): Promise<number> {
     try {
       const result = this.db.getFirstSync(
         `SELECT COALESCE(SUM(distance), 0) as totalDistance 
@@ -290,3 +292,5 @@ export class DatabaseService {
     }
   }
 }
+
+export const DB = new DatabaseService()

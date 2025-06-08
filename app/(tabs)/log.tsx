@@ -4,9 +4,9 @@ import { Input } from "@/components/Input"
 import MultiselectTypeWorkout from "@/components/MultiselectTypeWorkout"
 import { Colors } from "@/constants/Colors"
 import {
-  DatabaseService,
+  DB,
   Workout,
-  WorkoutGoalsType,
+  WorkoutGoalsType
 } from "@/services/DatabaseService"
 import * as Haptics from "expo-haptics"
 import React, { useState } from "react"
@@ -34,7 +34,6 @@ export const workoutTypes: WorkoutGoalsType[] = [
 export default function LogScreen() {
   const colorScheme = useColorScheme() || "light"
   const isDark = colorScheme === "dark"
-  const DB = new DatabaseService()
 
   const [date, setDate] = useState(new Date().toISOString().split("T")[0])
   const [distance, setDistance] = useState("")
@@ -43,13 +42,6 @@ export default function LogScreen() {
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [isLoading, setIsLoading] = useState(false)
   const [successMessage, setSuccessMessage] = useState("")
-
-  const selectWorkoutType = (type: WorkoutGoalsType) => {
-    setSelectedType(type)
-    if (Platform.OS !== "web") {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
-    }
-  }
 
   // Validate form
   const validate = (): boolean => {
