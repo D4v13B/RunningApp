@@ -7,6 +7,7 @@ import { DB } from "@/services/DatabaseService"
 // import { getRandomQuote } from '@/constants/Quotes';
 // import { DatabaseService } from '@/services/DatabaseService';
 import { Storage } from "@/services/StorageService"
+import { getRandomQuote } from "@/utils/getRandomQuote"
 import MaterialIcons from "@expo/vector-icons/MaterialIcons"
 import React, { useEffect, useState } from "react"
 import {
@@ -80,9 +81,9 @@ export default function HomeScreen() {
 
   // Show quote dialog
   const showQuoteDialog = () => {
-    // const quote = getRandomQuote();
-    // setCurrentQuote(quote);
-    setCurrentQuote("Tu puedes papito")
+    const quote = getRandomQuote()
+    setCurrentQuote(quote)
+    // setCurrentQuote("Tu puedes papito")
     setQuoteDialogVisible(true)
   }
 
